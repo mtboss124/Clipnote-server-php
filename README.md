@@ -7,5 +7,7 @@ currently we only have a very bad api implementation in php (not done and writin
 to host it /test youl need to host it like local host
 
 Clipnote made by Cal
+
 Original api made by Harper
+
 shitt code mtboss124
