@@ -10,4 +10,6 @@ Clipnote made by Cal
 
 Original api made by Harper
 
-shitt code mtboss124
+Inspiratoin James
+
+Shitt code mtboss124
