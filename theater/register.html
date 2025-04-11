@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Register</title>
+  <style>
+    body { font-family: sans-serif; max-width: 400px; margin: 2rem auto; }
+    input, select, button { display: block; width: 100%; margin: 0.5rem 0; padding: 0.5rem; }
+    .message { margin-top: 1rem; color: green; }
+    .error { color: red; }
+  </style>
+</head>
+<body>
+
+  <h1>Register</h1>
+  <form id="register-form">
+    <input type="text" name="username" placeholder="Username" required />
+    <input type="password" name="password" placeholder="Password" required />
+    <select name="permissions" required>
+      <option value="0">User</option>
+    </select>
+    <button type="submit">Register</button>
+    <div class="message" id="register-message"></div>
+  </form>
+
+  <script>
+    const apiURL = 'http://mtboss.ddns.net:8080/exp/clipnote/user'; // Adjust if needed
+
+    document.getElementById('register-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const form = e.target;
+      const formData = new FormData(form);
+      const message = document.getElementById('register-message');
+
+      try {
+        const res = await fetch(apiURL, {
+          method: 'POST',
+          body: formData,
+          headers: {
+            'Authorization': 'Basic ' + btoa(`${formData.get('username')}:${formData.get('password')}`)
+          }
+        });
+
+        const data = await res.json();
+        if (res.ok) {
+          message.textContent = data.message || 'User registered successfully!';
+          message.className = 'message';
+          
+  sessionStorage.setItem('username', username);
+  sessionStorage.setItem('password', password);
+  window.location.href = 'profile.html';
+        } else {
+          message.textContent = data.error || 'Registration failed.';
+          message.className = 'message error';
+        }
+      } catch (err) {
+        message.textContent = 'Error connecting to server.';
+        message.className = 'message error';
+      }
+    });
+  </script>
+
+</body>
+</html>

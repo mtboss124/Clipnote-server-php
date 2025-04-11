@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['list'])) {
                 'filename' => $note['filename'] ?? '3_frames',
                 'username' => $note['username'] ?? 'system',
                 'timestamp' => $note['timestamp'] ?? date('Y-m-d H:i:s'),
-                'rating' => intval($note['rating'] ?? 10),
+                'rating' => intval($note['rating'] ?? 0),
                 'locked' => boolval($note['locked'] ?? 0),
                 'spinoff' => boolval($note['spinoff'] ?? 0),
                 'author' => $note['author'] ?? 'system'
@@ -173,17 +173,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['download'])) {
     }
     exit;
 }
-
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['thumbnail'])) {
     $filename = $_GET['thumbnail'];
-    $filePath = $config['thumbnail_dir'] . "/" . $filename;
 
+    // Append .png if missing
+    if (!str_ends_with($filename, '.png')) {
+        $filename .= '.png';
+    }
+
+    $filePath = $config['thumbnail_dir'] . "/" . $filename;
+    $publicUrl = "/exp/clipnote/data/thumbnails/" . $filename; // Adjust if different in your setup
+
+    error_log("Requested thumbnail file path: $filePath");
 
     if (file_exists($filePath)) {
-        header("Location: " . $filePath);
+        // Redirect to the public thumbnail URL
+        header("Location: " . $publicUrl);
         exit;
     } else {
         http_response_code(404);
         echo json_encode(['error' => 'Thumbnail not found']);
     }
 }
+

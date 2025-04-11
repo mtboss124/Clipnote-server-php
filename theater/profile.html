@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Your Profile</title>
+  <style>
+    body { font-family: sans-serif; max-width: 600px; margin: 2rem auto; }
+    input, button { display: block; width: 100%; margin: 0.5rem 0; padding: 0.5rem; }
+    .message { margin-top: 1rem; }
+    .error { color: red; }
+  </style>
+</head>
+<body>
+
+  <h1>Welcome, <span id="username-display"></span></h1>
+
+  <h2>Upload a Clipnote (.clip or .zip)</h2>
+  <form id="upload-form" enctype="multipart/form-data">
+    <input type="file" name="file" accept=".zip,.clip" required />
+    <button type="submit">Upload</button>
+    <div class="message" id="upload-message"></div>
+  </form>
+
+  <script>
+    const apiURL = 'http://mtboss.ddns.net:8080/exp/clipnote/user';
+    const username = sessionStorage.getItem('username');
+    const password = sessionStorage.getItem('password');
+
+    // Show username
+    document.getElementById('username-display').textContent = username || 'Guest';
+
+    // Redirect if not logged in
+    if (!username || !password) {
+      window.location.href = 'login.html';
+    }
+
+    document.getElementById('upload-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const fileInput = e.target.file;
+      const message = document.getElementById('upload-message');
+
+      if (!fileInput.files.length) return;
+
+      const formData = new FormData();
+      formData.append('file', fileInput.files[0]);
+
+      try {
+        const res = await fetch(apiURL, {
+  method: 'POST',
+  headers: {
+    'Authorization': 'Basic ' + btoa(`${username}:${password}`),
+    // ❌ DON'T set this manually:
+    // 'Content-Type': 'multipart/form-data'
+  },
+  body: formData
+});
+
+
+        const data = await res.json();
+        if (res.ok) {
+          message.textContent = data.message || 'Upload successful!';
+          message.className = 'message';
+        } else {
+          message.textContent = data.error || 'Upload failed.';
+          message.className = 'message error';
+        }
+      } catch (err) {
+        message.textContent = 'Error connecting to server.';
+        message.className = 'message error';
+      }
+    });
+  </script>
+
+</body>
+</html>
