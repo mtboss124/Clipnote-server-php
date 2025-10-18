@@ -52,7 +52,7 @@
         
         <img src="img/reg.png" alt="Register" style="position: absolute; top: 217px; left: 121px;" onclick="playSoundAndRedirect('img/reg.png', 'register.html');">
        
-        <img src="img/cred.png" alt="Credits rules" style="position: absolute; top: 217px; left: 192px;" onclick="playSoundAndRedirect('img/cred.png', 'credits_page_url');">
+        <img src="img/cred.png" alt="Credits rules" style="position: absolute; top: 217px; left: 192px;" onclick="playSoundAndRedirect('img/cred.png', 'credits[rules.php');">
     </div>
     <audio id="button-sound" src="sound/button.mp3"></audio>
     <audio id="intro-sound" src="sound/splash.mp3"></audio>
