@@ -1,10 +1,12 @@
 <?php
+include __DIR__ . '/../theater/config/config.php';
+
 // Get page number from query string, default = 1
 $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
 $sort = isset($_GET['sort']) ? $_GET['sort'] : 'newest';
 
 // Fetch JSON data from the API
-$api_url = "http://mtboss.ddns.net:8080/exp/clipnote/note/list?page={$page}&sort={$sort}";
+$api_url = BASE_URI . "note/list?page={$page}&sort={$sort}";
 $response = file_get_contents($api_url);
 
 // Decode JSON
@@ -39,7 +41,7 @@ switch ($sort) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mockup</title>
+    <title><?=$api_url?></title>
     <style>
     @font-face {
         font-family: flipnote;
@@ -243,16 +245,16 @@ switch ($sort) {
         <div class="cgrid" style="position: absolute; top: 68px; left: 15px; width: 273px; overflow-y: auto;">
             <?php foreach ($notes as $note):?>
             <div class="cthumb">
-                <img src="http://mtboss.ddns.net:8080/exp/clipnote/data/thumbnails/<?=$note['filename']?>.png"
-                    class="thumb" style="image-rendering: smooth;">
+                
+                    <img src="<?=BASE_URI?>data/thumbnails/<?=$note['filename']?>.png" class="thumb"
+                        style="image-rendering: smooth;" onclick="playSoundAndRedirect('<?=BASE_URI?>data/thumbnails/<?=$note['filename']?>.png', '<?=BASE_URI?>theater/player.php?clipnote=<?=$note['filename']?>');">
 
 
                 <div class="cmeta">
                     <div class="ctitle">
-                        <span><a
-                                href="https://mtboss.ddns.net:8005/website/flipnote.php?flipnoteid=32"><?=$note['username']?></a></span>
+                        <span><a href="<?=BASE_URI?>theater "><?=$note['username']?></a></span>
                         <span id="starc">
-                            <?=0/*$note['rating']*/?></span>
+                            <?=$note['rating']?></span>
                     </div>
                 </div>
             </div>
@@ -261,8 +263,9 @@ switch ($sort) {
         <!-- Pagination -->
         <div class="pagination">
             <?php if ($page > 1): ?>
-            <img src="img/lr.png" alt="previous"onclick="playSoundAndRedirect('img/lr.png', '?page=<?=($page-1)?>&sort=<?=$sort?>'); ">
-            
+            <img src="img/lr.png" alt="previous"
+                onclick="playSoundAndRedirect('img/lr.png', '?page=<?=($page-1)?>&sort=<?=$sort?>'); ">
+
             <?php else: ?>
             <img src="img/lr.png" style="opacity:0.3;">
             <?php endif; ?>
@@ -270,7 +273,8 @@ switch ($sort) {
             <strong><?=$page?></strong> / <?=$totalPages?>
 
             <?php if ($page < $totalPages): ?>
-            <img src="img/rr.png" alt="next"onclick="playSoundAndRedirect('img/rr.png', '?page=<?=($page+1)?>&sort=<?=$sort?>'); ">
+            <img src="img/rr.png" alt="next"
+                onclick="playSoundAndRedirect('img/rr.png', '?page=<?=($page+1)?>&sort=<?=$sort?>'); ">
             <?php else: ?>
             <img src="img/rr.png" style="opacity:0.3;">
             <?php endif; ?>

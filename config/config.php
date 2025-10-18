@@ -15,3 +15,5 @@ return [
     'serverMOTD' => 'Welcome to Clipnote PHP Server',
     'signupURL' => 'http://mtboss.ddns.net:8080/exp/clipnote/theater/'
 ];
+
+?>
